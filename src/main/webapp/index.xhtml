@@ -13,7 +13,11 @@
         <h:link outcome="welcomePrimefaces" value="Primefaces welcome page" />
         <br />
         <h:link outcome="/views/ubicaciones/List" value="Show All Ubicaciones Items"/>
-        
+        <p:gmap zoom="16" center="#{ubicacionesController.center}" type="ROADMAP" style="width: 100%; height: 600px"
+                model="#{ubicacionesController.simpleModel}"/>
+
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBROFEj45F8Hvnxxm5UWSgaxQIW-M13W6Y"></script>
+
     </h:body>
 
 </html>

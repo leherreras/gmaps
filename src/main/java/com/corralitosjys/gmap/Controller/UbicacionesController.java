@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.inject.Named;
@@ -34,12 +35,48 @@ public class UbicacionesController implements Serializable {
     private List<Ubicaciones> items = null;
     private Ubicaciones selected;
 
-    private String center = "4.749454,-74.109567";
-    MapModel simpleModel;
-    MapModel simpleModelDraggable;
+    private MapModel draggableModel;
+    private MapModel simpleModel;
     private Marker marker;
+    private String center = "4.749523902918999,-74.10952837206423";
 
     public UbicacionesController() {
+    }
+    
+    @PostConstruct
+    public void init() {
+         simpleModel = new DefaultMapModel();
+
+        for (Ubicaciones item : getItems()) {
+            LatLng coord = new LatLng(item.getLatitud(), item.getLongitud());
+            simpleModel.addOverlay(new Marker(coord, item.getTitulo()));
+        }
+        
+        draggableModel = new DefaultMapModel();
+
+        for (Ubicaciones item : getItems()) {
+            LatLng coord = new LatLng(item.getLatitud(), item.getLongitud());
+            draggableModel.addOverlay(new Marker(coord, item.getTitulo()));
+        }
+        for (Marker premarker : draggableModel.getMarkers()) {
+            premarker.setDraggable(true);
+        }
+        
+       
+    }
+
+    public MapModel getDraggableModel() {
+        return draggableModel;
+    }
+    
+    public MapModel getSimpleModel() {
+        return simpleModel;
+    }
+
+    public void onMarkerDrag(MarkerDragEvent event) {
+        marker = event.getMarker();
+
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Marker Dragged", "Lat:" + marker.getLatlng().getLat() + ", Lng:" + marker.getLatlng().getLng()));
     }
 
     public String getCenter() {
@@ -48,29 +85,6 @@ public class UbicacionesController implements Serializable {
 
     public void setCenter(String center) {
         this.center = center;
-    }
-
-    public MapModel getSimpleModelDraggable() {
-        simpleModelDraggable = new DefaultMapModel();
-
-        for (Ubicaciones item : getItems()) {
-            LatLng coord = new LatLng(item.getLatitud(), item.getLongitud());
-            simpleModelDraggable.addOverlay(new Marker(coord, item.getTitulo()));
-        }
-        for (Marker preMarker : simpleModelDraggable.getMarkers()) {
-            preMarker.setDraggable(true);
-        }
-        return simpleModelDraggable;
-    }
-
-    public MapModel getSimpleModel() {
-        simpleModel = new DefaultMapModel();
-
-        for (Ubicaciones item : getItems()) {
-            LatLng coord = new LatLng(item.getLatitud(), item.getLongitud());
-            simpleModel.addOverlay(new Marker(coord, item.getTitulo()));
-        }
-        return simpleModel;
     }
 
     public Ubicaciones getSelected() {
@@ -89,12 +103,6 @@ public class UbicacionesController implements Serializable {
 
     private UbicacionesFacade getFacade() {
         return ejbFacade;
-    }
-
-    public void onMarkerDrag(MarkerDragEvent event) {
-        marker = event.getMarker();
-
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Marcador Latitud: ", "Lat:" + marker.getLatlng().getLat() + ", Longitud: " + marker.getLatlng().getLng()));
     }
 
     public Ubicaciones prepareCreate() {
