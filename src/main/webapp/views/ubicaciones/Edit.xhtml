@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="UbicacionesEditDlg" widgetVar="UbicacionesEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{titulos.EditUbicacionesTitle}">
+            <h:form id="UbicacionesEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{ubicacionesController.selected != null}">
+                        <p:outputLabel value="#{titulos.EditUbicacionesLabel_longitud}" for="longitud" />
+                        <p:inputText id="longitud" value="#{ubicacionesController.selected.longitud}" title="#{titulos.EditUbicacionesTitle_longitud}" required="true" requiredMessage="#{titulos.EditUbicacionesRequiredMessage_longitud}"/>
+                        <p:outputLabel value="#{titulos.EditUbicacionesLabel_latitud}" for="latitud" />
+                        <p:inputText id="latitud" value="#{ubicacionesController.selected.latitud}" title="#{titulos.EditUbicacionesTitle_latitud}" required="true" requiredMessage="#{titulos.EditUbicacionesRequiredMessage_latitud}"/>
+                        <p:outputLabel value="#{titulos.EditUbicacionesLabel_titulo}" for="titulo" />
+                        <p:inputText id="titulo" value="#{ubicacionesController.selected.titulo}" title="#{titulos.EditUbicacionesTitle_titulo}" required="true" requiredMessage="#{titulos.EditUbicacionesRequiredMessage_titulo}"/>
+                        <p:outputLabel value="#{titulos.EditUbicacionesLabel_detalle}" for="detalle" />
+                        <p:inputText id="detalle" value="#{ubicacionesController.selected.detalle}" title="#{titulos.EditUbicacionesTitle_detalle}" required="true" requiredMessage="#{titulos.EditUbicacionesRequiredMessage_detalle}"/>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{ubicacionesController.update}" value="#{titulos.Save}" update="display,:UbicacionesListForm:datalist,:growl" oncomplete="handleSubmit(args, 'UbicacionesEditDialog');"/>
+                    <p:commandButton value="#{titulos.Cancel}" onclick="UbicacionesEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>
